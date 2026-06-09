@@ -1,0 +1,156 @@
+<template>
+    <lightning-card title="Project & Assignment Management">
+
+        <!-- PROJECT SECTION -->
+        <div class="slds-p-around_medium">
+
+            <h2 class="slds-text-heading_medium slds-m-bottom_small">Projects</h2>
+
+            <!-- PROJECT SEARCH -->
+            <div class="slds-m-bottom_small">
+                <lightning-input
+                    label=""
+                    placeholder="Search project..."
+                    onchange={handleProjectSearch}>
+                </lightning-input>
+            </div>
+
+            <!-- PROJECT TABLE -->
+            <lightning-datatable
+                key-field="Id"
+                data={projects}
+                columns={projectColumns}
+                onrowaction={handleProjectRowAction}>
+            </lightning-datatable>
+
+            <!-- PROJECT FORM -->
+            <div class="slds-box slds-m-top_medium">
+                <h3 class="slds-text-heading_small slds-m-bottom_small">{projectSaveLabel}</h3>
+
+                <lightning-input
+                    label="Project Name"
+                    value={project.Name}
+                    data-field="Name"
+                    onchange={handleProjectChange}>
+                </lightning-input>
+
+                <lightning-textarea
+                    label="Description"
+                    value={project.Description__c}
+                    data-field="Description__c"
+                    onchange={handleProjectChange}>
+                </lightning-textarea>
+
+                <lightning-input
+                    type="date"
+                    label="Start Date"
+                    value={project.Start_Date__c}
+                    data-field="Start_Date__c"
+                    onchange={handleProjectChange}>
+                </lightning-input>
+
+                <lightning-input
+                    type="date"
+                    label="End Date"
+                    value={project.End_Date__c}
+                    data-field="End_Date__c"
+                    onchange={handleProjectChange}>
+                </lightning-input>
+
+                <lightning-combobox
+                    label="Status"
+                    value={project.Status__c}
+                    data-field="Status__c"
+                    options={projectStatusOptions}
+                    onchange={handleProjectChange}>
+                </lightning-combobox>
+
+                <div class="slds-m-top_small slds-grid slds-grid_align-start">
+                    <lightning-button
+                        label={projectSaveLabel}
+                        variant="brand"
+                        onclick={handleProjectSave}>
+                    </lightning-button>
+                    <template if:true={isProjectEditMode}>
+                        <lightning-button
+                            label="Cancel"
+                            class="slds-m-left_small"
+                            onclick={handleProjectCancel}>
+                        </lightning-button>
+                    </template>
+                </div>
+            </div>
+        </div>
+
+        <div class="slds-m-horizontal_medium" style="border-top: 1px solid #dddbda;"></div>
+
+        <!-- ASSIGNMENT SECTION -->
+        <div class="slds-p-around_medium">
+
+            <h2 class="slds-text-heading_medium slds-m-bottom_small">Assignments</h2>
+
+            <!-- ASSIGNMENT TABLE -->
+            <lightning-datatable
+                key-field="Id"
+                data={assignments}
+                columns={assignmentColumns}
+                onrowaction={handleAssignmentRowAction}>
+            </lightning-datatable>
+
+            <!-- ASSIGNMENT FORM -->
+            <div class="slds-box slds-m-top_medium">
+                <h3 class="slds-text-heading_small slds-m-bottom_small">{assignmentSaveLabel}</h3>
+
+                <lightning-combobox
+                    label="Employee"
+                    value={assignment.Employee__c}
+                    data-field="Employee__c"
+                    options={employeeOptions}
+                    onchange={handleAssignmentChange}>
+                </lightning-combobox>
+
+                <lightning-combobox
+                    label="Project"
+                    value={assignment.Project__c}
+                    data-field="Project__c"
+                    options={projectOptions}
+                    onchange={handleAssignmentChange}>
+                </lightning-combobox>
+
+                <lightning-combobox
+                    label="Role"
+                    value={assignment.Role__c}
+                    data-field="Role__c"
+                    options={roleOptions}
+                    onchange={handleAssignmentChange}>
+                </lightning-combobox>
+
+                <lightning-input
+                    type="number"
+                    label="Allocation %"
+                    value={assignment.Allocation__c}
+                    data-field="Allocation__c"
+                    min="1"
+                    max="100"
+                    onchange={handleAssignmentChange}>
+                </lightning-input>
+
+                <div class="slds-m-top_small slds-grid slds-grid_align-start">
+                    <lightning-button
+                        label={assignmentSaveLabel}
+                        variant="brand"
+                        onclick={handleAssignmentSave}>
+                    </lightning-button>
+                    <template if:true={isAssignmentEditMode}>
+                        <lightning-button
+                            label="Cancel"
+                            class="slds-m-left_small"
+                            onclick={handleAssignmentCancel}>
+                        </lightning-button>
+                    </template>
+                </div>
+            </div>
+        </div>
+
+    </lightning-card>
+</template>

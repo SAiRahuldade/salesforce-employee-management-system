@@ -1,0 +1,171 @@
+<template>
+    <div class="dashboard-root">
+        <div class="dashboard-hero">
+            <div class="hero-content">
+                <h1 class="hero-title">HR Analytics Dashboard</h1>
+                <p class="hero-subtitle">Real-time workforce, project, and leave insights</p>
+            </div>
+            <div class="hero-badge">
+                <lightning-icon icon-name="utility:clock" size="x-small" class="hero-badge-icon"></lightning-icon>
+                <span>Live Data</span>
+            </div>
+        </div>
+
+        <template if:true={loading}>
+            <div class="spinner-container">
+                <lightning-spinner alternative-text="Loading dashboard" size="medium"></lightning-spinner>
+            </div>
+        </template>
+
+        <template if:false={loading}>
+            <template if:true={stats}>
+                <!-- KPI Row -->
+                <div class="slds-grid slds-wrap slds-gutters_direct slds-var-m-bottom_large">
+                    <template for:each={kpiCards} for:item="kpi">
+                        <div key={kpi.key} class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-4 slds-var-m-bottom_medium">
+                            <div class={kpi.themeClass}>
+                                <div class="kpi-card">
+                                    <div class="kpi-icon-wrap">
+                                        <lightning-icon icon-name={kpi.icon} size="small"></lightning-icon>
+                                    </div>
+                                    <div class="kpi-body">
+                                        <span class="kpi-label">{kpi.label}</span>
+                                        <span class="kpi-value">{kpi.value}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+
+                <!-- Charts Row 1 -->
+                <div class="slds-grid slds-wrap slds-gutters_direct slds-var-m-bottom_large">
+                    <!-- Employee Donut -->
+                    <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-2 slds-var-m-bottom_medium">
+                        <div class="chart-panel">
+                            <div class="chart-panel-header">
+                                <lightning-icon icon-name="standard:people" size="small"></lightning-icon>
+                                <h2>Employee Status Distribution</h2>
+                            </div>
+                            <div class="chart-panel-body donut-layout">
+                                <div class="donut-wrap">
+                                    <svg viewBox="0 0 140 140" class="donut-svg" aria-hidden="true">
+                                        <circle cx="70" cy="70" r={donutRadius} class="donut-track"></circle>
+                                        <template for:each={employeeDonutSegments} for:item="seg">
+                                            <circle
+                                                key={seg.key}
+                                                cx="70"
+                                                cy="70"
+                                                r={donutRadius}
+                                                class="donut-segment"
+                                                stroke={seg.color}
+                                                stroke-dasharray={seg.dasharray}
+                                                stroke-dashoffset={seg.dashoffset}
+                                            ></circle>
+                                        </template>
+                                    </svg>
+                                    <div class="donut-center">
+                                        <span class="donut-center-value">{employeeDonutTotal}</span>
+                                        <span class="donut-center-label">Total</span>
+                                    </div>
+                                </div>
+                                <ul class="chart-legend">
+                                    <template for:each={employeeDonutSegments} for:item="seg">
+                                        <li key={seg.key} class="legend-item">
+                                            <span class="legend-swatch" style={seg.swatchStyle}></span>
+                                            <span class="legend-label">{seg.label}</span>
+                                            <span class="legend-value">{seg.value}</span>
+                                            <span class="legend-pct">{seg.percent}%</span>
+                                        </li>
+                                    </template>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Project Status Bars -->
+                    <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-2 slds-var-m-bottom_medium">
+                        <div class="chart-panel">
+                            <div class="chart-panel-header">
+                                <lightning-icon icon-name="standard:opportunity" size="small"></lightning-icon>
+                                <h2>Projects by Status</h2>
+                            </div>
+                            <div class="chart-panel-body">
+                                <template for:each={projectBars} for:item="bar">
+                                    <div key={bar.key} class="bar-row">
+                                        <div class="bar-meta">
+                                            <span class="bar-label">{bar.label}</span>
+                                            <span class="bar-count">{bar.value}</span>
+                                        </div>
+                                        <div class="bar-track">
+                                            <div class="bar-fill" style={bar.fillStyle}></div>
+                                        </div>
+                                        <span class="bar-share">{bar.sharePercent}% of total</span>
+                                    </div>
+                                </template>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Charts Row 2 -->
+                <div class="slds-grid slds-wrap slds-gutters_direct">
+                    <!-- Department Column Chart -->
+                    <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-2 slds-var-m-bottom_medium">
+                        <div class="chart-panel">
+                            <div class="chart-panel-header">
+                                <lightning-icon icon-name="standard:account" size="small"></lightning-icon>
+                                <h2>Employees by Department</h2>
+                                <span class="chart-total">{departmentTotal} total</span>
+                            </div>
+                            <div class="chart-panel-body column-chart">
+                                <template for:each={departmentBars} for:item="bar">
+                                    <div key={bar.key} class="column-item">
+                                        <div class="column-bar-wrap">
+                                            <div class="column-bar" style={bar.columnStyle}>
+                                                <span class="column-value">{bar.value}</span>
+                                            </div>
+                                        </div>
+                                        <span class="column-label">{bar.label}</span>
+                                    </div>
+                                </template>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Leave Requests -->
+                    <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-2 slds-var-m-bottom_medium">
+                        <div class="chart-panel">
+                            <div class="chart-panel-header">
+                                <lightning-icon icon-name="standard:case" size="small"></lightning-icon>
+                                <h2>Leave Requests Overview</h2>
+                                <span class="chart-total">{leaveTotal} total</span>
+                            </div>
+                            <div class="chart-panel-body leave-chart">
+                                <template for:each={leaveBars} for:item="bar">
+                                    <div key={bar.key} class="leave-block">
+                                        <div class="leave-block-header">
+                                            <span class="leave-dot" style={bar.dotStyle}></span>
+                                            <span class="leave-label">{bar.label}</span>
+                                        </div>
+                                        <div class="leave-value">{bar.value}</div>
+                                        <div class="leave-track">
+                                            <div class="leave-fill" style={bar.fillStyle}></div>
+                                        </div>
+                                    </div>
+                                </template>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </template>
+
+            <template if:true={error}>
+                <div class="error-container">
+                    <lightning-icon icon-name="utility:error" alternative-text="Error" variant="error" size="medium"></lightning-icon>
+                    <span class="error-text">Failed to load dashboard data. Please refresh the page.</span>
+                </div>
+            </template>
+        </template>
+    </div>
+</template>

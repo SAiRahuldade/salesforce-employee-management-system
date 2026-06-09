@@ -1,0 +1,167 @@
+<template>
+    <lightning-card title="Attendance & Leave Management">
+
+        <!-- ATTENDANCE SECTION -->
+        <div class="slds-p-around_medium">
+
+            <h2 class="slds-text-heading_medium slds-m-bottom_small">Attendance</h2>
+
+            <!-- ATTENDANCE TABLE -->
+            <lightning-datatable
+                key-field="Id"
+                data={attendances}
+                columns={attendanceColumns}
+                onrowaction={handleAttendanceRowAction}>
+            </lightning-datatable>
+
+            <!-- DIVIDER -->
+            <div class="slds-m-vertical_medium"
+                style="border-top: 1px solid #dddbda;">
+            </div>
+
+            <!-- ATTENDANCE FORM -->
+            <h3 class="slds-text-heading_small slds-m-bottom_small">{attendanceSaveLabel}</h3>
+
+            <lightning-combobox
+                label="Employee"
+                value={attendance.Employee__c}
+                data-field="Employee__c"
+                options={employeeOptions}
+                onchange={handleAttendanceChange}>
+            </lightning-combobox>
+
+
+
+            <lightning-input
+                type="datetime-local"
+                label="Check In Time"
+                value={attendance.Check_In_Time__c}
+                data-field="Check_In_Time__c"
+                onchange={handleAttendanceChange}>
+            </lightning-input>
+
+            <lightning-input
+                type="datetime-local"
+                label="Check Out Time"
+                value={attendance.Check_Out_Time__c}
+                data-field="Check_Out_Time__c"
+                onchange={handleAttendanceChange}>
+            </lightning-input>
+
+            <lightning-combobox
+                label="Status"
+                value={attendance.Status__c}
+                data-field="Status__c"
+                options={attendanceStatusOptions}
+                onchange={handleAttendanceChange}>
+            </lightning-combobox>
+
+            <div class="slds-m-top_small slds-grid slds-grid_align-start">
+                <lightning-button
+                    label={attendanceSaveLabel}
+                    variant="brand"
+                    onclick={handleAttendanceSave}>
+                </lightning-button>
+                <template if:true={isAttendanceEditMode}>
+                    <lightning-button
+                        label="Cancel"
+                        class="slds-m-left_small"
+                        onclick={handleAttendanceCancel}>
+                    </lightning-button>
+                </template>
+            </div>
+
+        </div>
+
+        <!-- THICK DIVIDER between sections -->
+        <div class="slds-m-horizontal_medium"
+            style="border-top: 3px solid #dddbda;">
+        </div>
+
+        <!-- LEAVE SECTION -->
+        <div class="slds-p-around_medium">
+
+            <h2 class="slds-text-heading_medium slds-m-bottom_small">Leave Requests</h2>
+
+            <!-- LEAVE TABLE -->
+            <lightning-datatable
+                key-field="Id"
+                data={leaveRequests}
+                columns={leaveColumns}
+                onrowaction={handleLeaveRowAction}>
+            </lightning-datatable>
+
+            <!-- DIVIDER -->
+            <div class="slds-m-vertical_medium"
+                style="border-top: 1px solid #dddbda;">
+            </div>
+
+            <!-- LEAVE FORM -->
+            <h3 class="slds-text-heading_small slds-m-bottom_small">{leaveSaveLabel}</h3>
+
+            <lightning-combobox
+                label="Employee"
+                value={leaveRequest.Employee__c}
+                data-field="Employee__c"
+                options={employeeOptions}
+                onchange={handleLeaveChange}>
+            </lightning-combobox>
+
+            <lightning-combobox
+                label="Leave Type"
+                value={leaveRequest.Leave_Type__c}
+                data-field="Leave_Type__c"
+                options={leaveTypeOptions}
+                onchange={handleLeaveChange}>
+            </lightning-combobox>
+
+            <lightning-input
+                type="date"
+                label="Start Date"
+                value={leaveRequest.Start_Date__c}
+                data-field="Start_Date__c"
+                onchange={handleLeaveChange}>
+            </lightning-input>
+
+            <lightning-input
+                type="date"
+                label="End Date"
+                value={leaveRequest.End_Date__c}
+                data-field="End_Date__c"
+                onchange={handleLeaveChange}>
+            </lightning-input>
+
+            <lightning-textarea
+                label="Reason"
+                value={leaveRequest.Reason__c}
+                data-field="Reason__c"
+                onchange={handleLeaveChange}>
+            </lightning-textarea>
+
+            <lightning-combobox
+                label="Status"
+                value={leaveRequest.Status__c}
+                data-field="Status__c"
+                options={leaveStatusOptions}
+                onchange={handleLeaveChange}>
+            </lightning-combobox>
+
+            <div class="slds-m-top_small slds-grid slds-grid_align-start">
+                <lightning-button
+                    label={leaveSaveLabel}
+                    variant="brand"
+                    onclick={handleLeaveSave}>
+                </lightning-button>
+                <template if:true={isLeaveEditMode}>
+                    <lightning-button
+                        label="Cancel"
+                        class="slds-m-left_small"
+                        onclick={handleLeaveCancel}>
+                    </lightning-button>
+                </template>
+            </div>
+
+        </div>
+
+    </lightning-card>
+</template>

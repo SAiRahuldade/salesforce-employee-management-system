@@ -1,0 +1,89 @@
+<template>
+    <lightning-card title="Employee Management System">
+
+        <!-- SEARCH -->
+        <div class="slds-p-around_small">
+            <lightning-input
+                label=""
+                placeholder="Search employee..."
+                onchange={handleSearch}>
+            </lightning-input>
+        </div>
+
+        <!-- TABLE -->
+        <div class="slds-p-around_small">
+            <lightning-datatable
+                key-field="Id"
+                data={employees}
+                columns={columns}
+                onrowaction={handleRowAction}>
+            </lightning-datatable>
+        </div>
+
+        <!-- DIVIDER -->
+        <div class="slds-m-horizontal_medium slds-m-vertical_small"
+            style="border-top: 1px solid #dddbda;">
+        </div>
+
+        <!-- FORM — always visible -->
+        <div class="slds-p-around_medium">
+
+            <h3 class="slds-text-heading_small slds-m-bottom_small">{saveLabel}</h3>
+
+            <lightning-input
+                label="Name"
+                value={employee.Name}
+                data-field="Name"
+                onchange={handleChange}>
+            </lightning-input>
+
+            <lightning-input
+                label="Email"
+                value={employee.Email__c}
+                data-field="Email__c"
+                onchange={handleChange}>
+            </lightning-input>
+
+            <lightning-combobox
+                label="Department"
+                value={employee.Department__c}
+                data-field="Department__c"
+                options={departmentOptions}
+                onchange={handleChange}>
+            </lightning-combobox>
+
+            <lightning-input
+                type="number"
+                label="Salary"
+                value={employee.Salary__c}
+                data-field="Salary__c"
+                onchange={handleChange}>
+            </lightning-input>
+
+            <lightning-combobox
+                label="Status"
+                value={employee.Status__c}
+                data-field="Status__c"
+                options={statusOptions}
+                onchange={handleChange}>
+            </lightning-combobox>
+
+            <div class="slds-m-top_medium slds-grid slds-grid_align-start">
+                <lightning-button
+                    label={saveLabel}
+                    variant="brand"
+                    onclick={handleSave}>
+                </lightning-button>
+                <template if:true={isEditMode}>
+                    <lightning-button
+                        label="Cancel Edit"
+                        class="slds-m-left_small"
+                        onclick={handleCancel}>
+                    </lightning-button>
+                </template>
+            </div>
+
+        </div>
+
+    </lightning-card>
+</template>
